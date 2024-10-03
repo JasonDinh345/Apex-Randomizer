@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -13,31 +14,32 @@ import org.springframework.stereotype.Service;
 @Service
 public class LegendService {
 
-	private LegendRepository myRepository;
+	private LegendRepository legendRepository;
 
 	@Autowired
 	public LegendService(LegendRepository theRepository){
-		myRepository = theRepository;
+		legendRepository = theRepository;
 	}
 	public List<Legend> getLegends(){
-		return myRepository.findAll();
+		return legendRepository.findAll();
 	}
-	public void addNewLegend(Legend theLegend) {
-		Optional<Legend> legendOptional = myRepository.findLegendByName(theLegend.getName());
+	public ResponseEntity<Legend> addNewLegend(Legend theLegend) {
+		Optional<Legend> legendOptional = legendRepository.findLegendByName(theLegend.getName());
 		if(legendOptional.isPresent()){
-			throw new IllegalStateException("Legend Already Exists");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
-		myRepository.save(theLegend);
+		legendRepository.save(theLegend);
+		return ResponseEntity.ok(theLegend);
 	}
 
 	public Legend getLegendById(Long id){
-		return myRepository.findAll().stream().filter(legend -> legend.getID().equals(id)).findFirst().orElse(null);
+		return legendRepository.findAll().stream().filter(legend -> legend.getID().equals(id)).findFirst().orElse(null);
 	}
 
 	public ResponseEntity<Legend> updateLegend(Long id, Legend updatedLegend){
 		Legend existingLegend;
         try{
-			existingLegend = myRepository.findById(id).get();
+			existingLegend = legendRepository.findById(id).get();
 		}catch(NoSuchElementException e){
 			return ResponseEntity.notFound().build();
 			
@@ -54,12 +56,12 @@ public class LegendService {
         }
 
 
-		myRepository.save(existingLegend);
+		legendRepository.save(existingLegend);
 		return ResponseEntity.ok(existingLegend);
 	}
     public ResponseEntity<Legend> deleteLegend(Long id) {
-		if (myRepository.existsById(id)) {
-            myRepository.deleteById(id);
+		if (legendRepository.existsById(id)) {
+            legendRepository.deleteById(id);
 			return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

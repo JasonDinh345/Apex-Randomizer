@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 
-@RequestMapping(path = "api/v1/legends")
+@RequestMapping(path = "api/legends")
 public class LegendController {
     private LegendService myService;
 
@@ -36,8 +36,8 @@ public class LegendController {
     }
 
     @PostMapping
-    public void addNewLegend(@RequestBody Legend theLegend){
-        myService.addNewLegend(theLegend);
+    public ResponseEntity<Legend> addNewLegend(@RequestBody Legend theLegend){
+        return myService.addNewLegend(theLegend);
     }
 
     @PatchMapping("/{id}")

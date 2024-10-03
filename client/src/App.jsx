@@ -7,7 +7,7 @@ function App() {
   const [data, setData] = useState([])
 
   useEffect(()=>{
-    axios.get("http://localhost:8000/api/v1/legends").then(res =>{
+    axios.get("http://localhost:8000/api/legends").then(res =>{
       setData(res.data)
     }).catch(err=>{
       console.log(err)
