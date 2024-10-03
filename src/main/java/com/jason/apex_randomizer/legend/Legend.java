@@ -24,16 +24,19 @@ public class Legend {
     private Long id;
     private String name;
     private String className;
+    private String imageURL;
 
     public Legend(){
         
-        name = "unknown";
-        className = "unknown";
+        name = null;
+        className = null;
+        imageURL = null;
     }
-    public Legend(final String theName, final String theClassName){
+    public Legend(final String theName, final String theClassName, final String theImageURL){
        
         name = theName;
         className = theClassName;
+        imageURL = theImageURL;
     }
     public Long getID(){
         return id;
@@ -44,6 +47,9 @@ public class Legend {
     public String getClassName(){
         return className;
     }
+    public String getImageURL(){
+        return imageURL;
+    }
     public void setID(final Long theID){
         id = theID;
     }
@@ -53,8 +59,11 @@ public class Legend {
     public void setClassName(final String theClassName){
         className = theClassName;
     }
+    public void setImageURL(final String theImageURL){
+        this.imageURL = theImageURL; 
+    }
     public String toString(){
-        return name + " is a " + className;
+        return name + " is a " + className + " with a image URL of " + imageURL;
     }
     
 }

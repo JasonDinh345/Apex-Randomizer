@@ -11,4 +11,6 @@ public interface LegendRepository extends JpaRepository<Legend, Long>{
 
     @Query("SELECT l FROM Legend l WHERE l.name = ?1")
     Optional<Legend> findLegendByName(String theName);
+
+    
 } 
