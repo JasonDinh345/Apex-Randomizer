@@ -52,6 +52,8 @@
 	</dependencies>
 
 	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>  <!-- Main Java source directory -->
+        <testSourceDirectory>src/test/java</testSourceDirectory>  <!-- Test Java source directory -->
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
