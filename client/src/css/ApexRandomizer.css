@@ -1,0 +1,16 @@
+#pagebackground{
+    background: rgb(194,68,68);
+    background: linear-gradient(90deg, rgba(194,68,68,1) 0%, rgba(255,159,75,1) 35%, rgba(255,81,0,1) 100%);
+    width:100svw;
+    height: 100vh;
+    overflow: hidden;
+
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

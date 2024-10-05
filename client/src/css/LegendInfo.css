@@ -1,0 +1,13 @@
+.legendContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    height:100%;
+    width:50%;
+    flex-wrap: w;
+}
+.legendContainer img{
+    height: auto;
+    max-width: 100%;
+}

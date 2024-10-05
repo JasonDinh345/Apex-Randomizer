@@ -1,0 +1,14 @@
+#randomizerContainer{
+    background: white;
+    width: 80%;
+    height: 80%;
+
+    box-sizing: border-box;
+
+    border: 5px solid black;
+    border-radius: 20px;
+    box-shadow: 10px 10px  black;
+
+    display: flex;
+    flex-direction: row;
+}
