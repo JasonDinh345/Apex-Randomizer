@@ -1,13 +1,21 @@
-.weaponContianer{
+.weaponContainer{
     display: flex;
     flex-direction: column;
     align-items: center;
 
-    height:100%;
-    width:50%;
+    width: 100%; /* or a percentage like 100% */
+    height: 30vh; /* Set a height to control the size */
 }
 
-.weaponContianer img{
-    height: auto;
-    max-width: 100%;
+.weaponContainer img{
+    height: 70%;
+    width: 100%;
+    object-fit: contain;
+
+    
 }
+@media only screen and (max-width: 600px) {
+    .weaponContainer{
+        height: 10vh;
+    }
+  }

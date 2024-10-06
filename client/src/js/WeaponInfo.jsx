@@ -6,7 +6,7 @@ export default function WeaponInfo({weapon}){
         <>
        { weapon && 
        <>
-        <div className="weaponContianer">
+        <div className="weaponContainer">
             <h1>{weapon.name}</h1>
             <WeaponImage imageURL={weapon.imageURL}/>
         </div>

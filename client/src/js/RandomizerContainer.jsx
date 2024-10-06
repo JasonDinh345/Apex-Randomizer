@@ -76,10 +76,17 @@ export default function RandomizerContainer(){
           {isLoading ? (<p>loading</p>):(
             <>
               <div id="randomizerContainer">
-                <LegendInfo legend={loadout.legend}/>
-                <WeaponInfo weapon={loadout.weapon1}/>
-                <WeaponInfo weapon={loadout.weapon2}/>
-                <button onClick={handleClick}>Generate Loadout</button>
+                <div className="randomizerContainer-main">
+                    <div className="randomizerContainer-legend">
+                        <LegendInfo legend={loadout.legend}/>
+                    </div>
+                    <div className="randomizerContainer-weapons">
+                        <WeaponInfo weapon={loadout.weapon1}/>
+                        <WeaponInfo weapon={loadout.weapon2}/>
+                    </div>
+                </div>
+                
+                <button className="randomizerContainer-button"onClick={handleClick}>Generate Loadout</button>
             </div>
             </>
           )}
