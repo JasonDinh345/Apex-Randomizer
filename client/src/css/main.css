@@ -1,0 +1,13 @@
+body{
+    font-family: 'ApexFont';
+}
+@font-face{
+font-family: 'ApexFont';
+  src: url('../../public/Apex-Bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@keyframes spin {
+    from{transform: rotate(0);}
+    to{transform: rotate(360deg);}
+}

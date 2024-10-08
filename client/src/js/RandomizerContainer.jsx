@@ -78,7 +78,7 @@ export default function RandomizerContainer(){
         return () => {
             isMounted = false;
         }
-      }, [legends, weapons,ammo]);
+      }, [legends, weapons,ammo, legendClasses]);
     const loadoutReducer = (loadout, action) =>{
         switch(action.type){
             case "generate-all":
@@ -110,6 +110,7 @@ export default function RandomizerContainer(){
                     <p>loading</p>
                 ):(
                    <DispatchContext.Provider value={loadoutDispatch}>
+                    <button disabled={isLoading} className="randomizerContainer-button"onClick={handleClick}>Generate Loadout</button>
                      <div className="randomizerContainer-main">
                         <div className="randomizerContainer-legend">
                             <LegendInfo legend={loadout.legend}/>
@@ -121,7 +122,7 @@ export default function RandomizerContainer(){
                         </div>
                     </div>
                 
-                    <button disabled={isLoading} className="randomizerContainer-button"onClick={handleClick}>Generate Loadout</button>
+                    
                    </DispatchContext.Provider>
                 )}
             </div>

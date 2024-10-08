@@ -1,3 +1,14 @@
+.randomizerContainer-legend{
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    width:50%;
+    margin:1%
+    
+}
 .legendContainer{
     display: flex;
     flex-direction: column;
@@ -32,12 +43,18 @@
     animation-duration: 0.5s;
     
 }
-@keyframes spin {
-    from{transform: rotate(0);}
-    to{transform: rotate(360deg);}
-}
 @media only screen and (max-width: 600px) {
-    .legendContainer{
-        height: 30vh
+    .randomizerContainer-legend{
+        display: flex;
+        flex-direction: column;
+    
+        justify-content: center;
+        align-items: center;
+    
+        width:100%;
+        height: 20%;
+        margin:1%
+        
     }
+    
   }

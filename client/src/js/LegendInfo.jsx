@@ -16,10 +16,12 @@ export default function LegendInfo({legend}){
     return(
         <>
         <div className="legendContainer" id="legend">
-            <h1>{legend.name}</h1>
+            <h1>{legend.name|| "???"}</h1>
             <LegendImage imageURL={legend.imageURL}/>
+            
         </div>
         <button ref={buttonRef}className="legend-reroll"onClick={handleClick}  ><img src="reroll.png"/></button>
+        
         </>
     )
 }

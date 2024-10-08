@@ -1,13 +1,15 @@
 import PropTypes from "prop-types";
+import "../css/CenterIcons.css"
+import IconImage from "./IconImage";
 export default function CenterIcons({loadout}){
     
     return(
         <div className="randomizerContainer-icons">
             {loadout.legend.imageURL  &&
                 <>
-                <img src={loadout.legend.legendClass.imageURL}/>
-                <img src={loadout.weapon1.ammo.imageURL}/>
-                <img src={loadout.weapon2.ammo.imageURL}/>
+                <IconImage imageURL={loadout.weapon1.ammo.imageURL}/>
+                <IconImage imageURL={loadout.legend.legendClass.imageURL}/>
+                <IconImage imageURL={loadout.weapon2.ammo.imageURL}/>
                 </>
             }
         </div>

@@ -17,7 +17,7 @@ export default function WeaponInfo({weapon, position}){
        { weapon && 
        <>
         <div className="weaponContainer">
-            <h1>{weapon.name}</h1>
+            <h1>{weapon.name || "???"}</h1>
             <WeaponImage imageURL={weapon.imageURL}/>
             <button ref={buttonRef}className="weapon-reroll"onClick={handleClick}  ><img src="reroll.png"/></button>
         </div>

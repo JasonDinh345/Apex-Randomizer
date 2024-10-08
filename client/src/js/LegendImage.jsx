@@ -4,7 +4,9 @@ export default function LegendImage({imageURL}){
     
     return(
         <>
-        {imageURL &&  (<img rel="preload" loading="lazy"alt="" src={imageURL}/>)}
+        {imageURL ?  (<img rel="preload" loading="lazy"alt="" src={imageURL}/>):(
+            <img src="mysterylegend.png"/>
+        )}
         </>
     )
 }
