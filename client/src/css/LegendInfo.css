@@ -2,15 +2,39 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
+    justify-content: center;
     width: 100%; /* or a percentage like 100% */
-    height: 70vh; /* Set a height to control the size */
+    height: 60vh; /* Set a height to control the size */
+    
     
 }
 .legendContainer img{
     height: 80%;
     width: 100%;
     object-fit: contain;
+}
+.legend-reroll{
+   width:50px;
+   height:50px;
+   border-radius: 50%;
+
+   display: flex;
+    align-items: center;
+
+}
+.legend-reroll img{
+    object-fit: contain;
+    width: 100%;
+    
+}
+.legend-reroll:focus{
+    animation-name: spin;
+    animation-duration: 0.5s;
+    
+}
+@keyframes spin {
+    from{transform: rotate(0);}
+    to{transform: rotate(360deg);}
 }
 @media only screen and (max-width: 600px) {
     .legendContainer{

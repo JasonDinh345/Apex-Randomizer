@@ -9,25 +9,32 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.jason.apex_randomizer.legendClass.LegendClass;
+import com.jason.apex_randomizer.legendClass.LegendClassRepository;
+
 
 
 @Service
 public class LegendService {
 
 	private LegendRepository legendRepository;
+	private LegendClassRepository legendClassRepository;
 
 	@Autowired
-	public LegendService(LegendRepository theRepository){
+	public LegendService(LegendRepository theRepository, LegendClassRepository theRepo){
 		legendRepository = theRepository;
+		legendClassRepository = theRepo;
 	}
 	public List<Legend> getLegends(){
 		return legendRepository.findAll();
 	}
 	public ResponseEntity<Legend> addNewLegend(Legend theLegend) {
 		Optional<Legend> legendOptional = legendRepository.findLegendByName(theLegend.getName());
-		if(legendOptional.isPresent()){
+		Optional<LegendClass> optionalClass = legendClassRepository.findLegendClassByName(theLegend.getClassName());
+		if(legendOptional.isPresent()||!optionalClass.isPresent()){
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
+		theLegend.setLegendClass(optionalClass.get());
 		legendRepository.save(theLegend);
 		return ResponseEntity.ok(theLegend);
 	}
@@ -49,7 +56,12 @@ public class LegendService {
             existingLegend.setName(updatedLegend.getName());
         }
         if (updatedLegend.getClassName() != null) {
-            existingLegend.setClassName(updatedLegend.getClassName());
+			Optional<LegendClass> optionalClass = legendClassRepository.findLegendClassByName(updatedLegend.getClassName());
+			if(!optionalClass.isPresent()){
+				return ResponseEntity.badRequest().build();
+			}
+
+            existingLegend.setLegendClass(optionalClass.get());
         }
         if (updatedLegend.getImageURL() != null) {
             existingLegend.setImageURL(updatedLegend.getImageURL());

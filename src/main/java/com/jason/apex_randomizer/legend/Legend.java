@@ -1,12 +1,17 @@
 package com.jason.apex_randomizer.legend;
 
 
+import com.jason.apex_randomizer.legendClass.LegendClass;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "legends")
@@ -23,6 +28,12 @@ public class Legend {
     )
     private Long id;
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "legendClass_id")
+    private LegendClass legendClass;
+
+    @Transient
     private String className;
     private String imageURL;
 
@@ -31,6 +42,7 @@ public class Legend {
         name = null;
         className = null;
         imageURL = null;
+        legendClass = null;
     }
     public Legend(final String theName, final String theClassName, final String theImageURL){
        
@@ -47,6 +59,9 @@ public class Legend {
     public String getClassName(){
         return className;
     }
+    public LegendClass getLegendClass(){
+        return legendClass;
+    }
     public String getImageURL(){
         return imageURL;
     }
@@ -56,14 +71,16 @@ public class Legend {
     public void setName(final String theName){
         name = theName;
     }
+    public void setLegendClass(final LegendClass theClass){
+        legendClass = theClass;
+    }
+
     public void setClassName(final String theClassName){
         className = theClassName;
     }
     public void setImageURL(final String theImageURL){
         this.imageURL = theImageURL; 
     }
-    public String toString(){
-        return name + " is a " + className + " with a image URL of " + imageURL;
-    }
+   
     
 }

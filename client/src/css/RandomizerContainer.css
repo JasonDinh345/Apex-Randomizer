@@ -18,7 +18,7 @@
 .randomizerContainer-main{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 
     width:100%;
@@ -31,7 +31,17 @@
     justify-content: center;
     align-items: center;
 
-    width:100%;
+    width:50%;
+    
+}
+.randomizerContainer-icons{
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-evenly;
+    align-items: center;
+    height: 100%;
+    width:20%;
     
 }
 .randomizerContainer-weapons{
@@ -41,7 +51,8 @@
     justify-content: space-evenly;
     align-items: center;
     height: 100%;
-    width:100%;
+    width:50%;
+    
     
 }
 .randomizerContainer-button{
