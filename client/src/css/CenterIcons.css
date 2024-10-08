@@ -1,0 +1,39 @@
+.randomizerContainer-icons{
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width:20%;
+    
+}
+
+.iconImage-contianer{
+    width: 100%;
+    height: 20vh;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.iconImage-contianer img{
+    width: 100%;
+    height: 70%;
+    object-fit: contain;
+}
+
+@media only screen and (max-width: 600px) {
+    .randomizerContainer-icons{
+        
+        flex-direction: row;
+        height: 10%;
+        width:100%;
+    }
+    .iconImage-contianer{
+        width: 100%;
+        height: 15vh;
+        
+
+    }
+  }
