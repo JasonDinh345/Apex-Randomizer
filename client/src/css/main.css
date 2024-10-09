@@ -3,7 +3,7 @@ body{
 }
 @font-face{
 font-family: 'ApexFont';
-  src: url('../../public/Apex-Bold.ttf') format('truetype');
+  src: url('Apex-Bold.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

@@ -16,7 +16,7 @@ export default function LegendInfo({legend}){
     return(
         <>
         <div className="legendContainer" id="legend">
-            <h1>{legend.name|| "???"}</h1>
+            {legend.name === undefined ? (<h1>???</h1>):(<h1>{legend.name}</h1>)}
             <LegendImage imageURL={legend.imageURL}/>
             
         </div>
@@ -33,5 +33,5 @@ LegendInfo.propTypes = {
             imageURL: PropTypes.string
         }),
         imageURL: PropTypes.string,            
-    }).isRequired,  
+    }),  
   };
