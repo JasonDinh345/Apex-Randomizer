@@ -1,12 +1,16 @@
 import LegendInfo from "./LegendInfo";
 import WeaponInfo from "./WeaponInfo";
-import { useState, useEffect, useReducer, createContext, useMemo } from "react";
+import { useState, useEffect, useReducer, createContext, useMemo, lazy,  Suspense } from "react";
 import "../css/RandomizerContainer.css"
-import axios from 'axios'
-import CenterIcons from "./CenterIcons";
-import SettingsPanel from "./SettingsPanel";
 
-export const DispatchContext = createContext();
+import CenterIcons from "./CenterIcons";
+const SettingsPanel = lazy(()=>import("./SettingsPanel"))
+
+import fetchData from "./misc/fetchData";
+import { defaultSettings } from "./misc/defaultSettings";
+
+export const SettingsDispatchContext = createContext();
+
 export default function RandomizerContainer(){
     const [legends, setLegends] = useState([]);
     const [weapons, setWeapons] = useState([])
@@ -14,60 +18,73 @@ export default function RandomizerContainer(){
     const [legendClasses, setLegendClasses] = useState([])
     const [isLoading, setLoading] = useState(false)
     const [prevLoadout, setPrevLoadout] = useState({legend: {}, weapon1: {}, weapon2: {}})
+    const [isSettingsVisible, setSettingsVisible] = useState(false)
     const settingsReducer = (settings, action) => {
-        switch(action.type){
+        switch(settings, action.type){
+            case("handleChange-legend"):
+            return {...settings, legendSettings: settings.legendSettings.map(setting =>{
+                if(setting.label === action.payload.label){
+                    return {...setting, checked: !setting.checked}
+                }
+                return setting
+            })}
+            case("handleChange-weapon"):
+                return {...settings, weaponSettings: settings.weaponSettings.map(setting =>{
+                    if(setting.label === action.payload.label){
+                        return {...setting, checked: !setting.checked}
+                    }
+                    return setting
+                })}
             default:
                 return settings
         }
     }
-    const [settings, settingsDispatch] = useReducer(settingsReducer, {
-        legendSettings : [
-            {label: "Only Controllers", 
-            condition: function (legend){
-                return legend.legendClass.name === "Controller"
-            },
-            checked: false
-        }],
-        weaponSettings : {}
-    })
+    
+    const [settings, settingsDispatch] = useReducer(settingsReducer, defaultSettings)
+    const dupeSetting = settings.weaponSettings.filter(setting => setting.label.includes("Duplicate"))
+
+    
+ 
+    const filteredLegends = useMemo(()=>{
+
+        return legends.filter(legend => {
+            return settings.legendSettings.every(setting => !setting.checked || setting.condition(legend, prevLoadout.legend));
+        })
+    },[settings, legends,prevLoadout])
+
+    const filteredWeapons = useMemo(()=>{
+        console.log(prevLoadout)
+        return weapons.filter(weapon => {
+            return settings.weaponSettings.every(setting => {
+              
+                if (setting.label.includes("Duplicate") || !setting.checked) {
+                  return true;
+                }
+              
+                return setting.condition(weapon, prevLoadout);
+              });
+        })
+    },[settings, weapons ,prevLoadout])
+  
     const getRandomLegend = ()=>{
         return filteredLegends[Math.floor(Math.random() * filteredLegends.length)]
     }
     const getRandomWeapon = ()=>{
-        return weapons[Math.floor(Math.random() * weapons.length)]
+        return filteredWeapons[Math.floor(Math.random() * filteredWeapons.length )]
     }
-    const filteredLegends = useMemo(()=>{
+  
 
-        return legends.filter(legend => {
-            return settings.legendSettings.every(setting => !setting.checked || setting.condition(legend));
-        })
-    },[settings, legends])
-    console.log(filteredLegends)
+   
     useEffect(()=>{
         let isMounted = true;
         if(isMounted){
-            axios.get(import.meta.env.VITE_SERVER_URL_LEGENDS).then(res =>
-                setLegends(res.data)
-            ).catch(err => 
-                console.log("There was an error fetching the legends: " + err)
-            )
-    
-            axios.get(import.meta.env.VITE_SERVER_URL_WEAPONS).then(res =>
-                setWeapons(res.data)
-            ).catch(err => 
-                
-                console.log("There was an error fetching the weapons: " + err)
-            )
-            axios.get(import.meta.env.VITE_SERVER_URL_AMMO).then(res =>
-                setAmmo(res.data)
-                ).catch(err =>{
-                    console.log("There was an error fetching the ammo: " + err)
-            })
-            axios.get(import.meta.env.VITE_SERVER_URL_LEGEND_CLASSES).then(res =>
-                setLegendClasses(res.data)
-            ).catch(err => 
-                console.log("There was an error fetching the legends: " + err)
-            )
+            async function getData() {
+                setLegends(await fetchData(import.meta.env.VITE_SERVER_URL_LEGENDS))
+                setWeapons(await fetchData(import.meta.env.VITE_SERVER_URL_WEAPONS))
+                setAmmo(await fetchData(import.meta.env.VITE_SERVER_URL_AMMO))
+                setLegendClasses(await fetchData(import.meta.env.VITE_SERVER_URL_LEGEND_CLASSES))
+            }
+            getData();
         }
         return () => {
             isMounted = false;
@@ -103,30 +120,57 @@ export default function RandomizerContainer(){
             isMounted = false;
         }
       }, [legends, weapons,ammo, legendClasses]);
-
-    const loadoutReducer = (loadout, action) =>{
-        switch(action.type){
-            case "generate-all":
-                setPrevLoadout(loadout);
-                return {legend: getRandomLegend(), 
-                        weapon1: getRandomWeapon(),
-                        weapon2: getRandomWeapon()}
-            case "change-legend":
-                setPrevLoadout(loadout);
-                return{...loadout, legend: getRandomLegend()}
-            case "change-weapon1":
-                setPrevLoadout(loadout);
-                return{...loadout, weapon1: getRandomWeapon()}
-            case "change-weapon2":
-                setPrevLoadout(loadout);
-                return{...loadout, weapon2: getRandomWeapon()}
-            default: 
+    const loadoutReducer = (loadout, action) => {
+        setPrevLoadout(loadout)
+        let weapon1 = getRandomWeapon();
+        let weapon2 = getRandomWeapon();
+        let legend = getRandomLegend();
+        switch(loadout, action.type){
+            case("generate-all"):
+                while(dupeSetting.some(setting => {
+                    if(setting.checked){
+                        return setting.condition(weapon1, weapon2)
+                    }
+                    return false
+                })){
+                    weapon1  = getRandomWeapon()
+                }
+                return {legend: legend, weapon1: weapon1, weapon2: weapon2}
+            case("generate-legend"):
+                return {...loadout, legend: legend}
+            case("generate-weapon"):
+            if(action.payload.position === 1){
+              
+                while(dupeSetting.some(setting => {
+                    if(setting.checked){
+                        return setting.condition(weapon1, loadout.weapon2)
+                    }
+                    return false
+                })){
+                    weapon1  = getRandomWeapon()
+                }
+                return {...loadout, weapon1: weapon1}
+            }else{
+                while(dupeSetting.some(setting => {
+                    if(setting.checked){
+                        return setting.condition(weapon2, loadout.weapon1)
+                    }
+                    return false
+                })){
+                    weapon2  = getRandomWeapon()
+                }
+                return {...loadout, weapon2: weapon2}
+            }
+            default:
                 return loadout
+
         }
     }
+    
     const [loadout, loadoutDispatch] = useReducer(loadoutReducer, {legend: {}, weapon1: {}, weapon2: {}})
-   
-   
+    
+    
+      
     return(
         <>
             <>
@@ -135,24 +179,35 @@ export default function RandomizerContainer(){
                     <p>loading</p>
                 ):(
                     <>
-                   <DispatchContext.Provider value={loadoutDispatch}>
-                    <button disabled={isLoading} className="randomizerContainer-button"onClick={()=> loadoutDispatch({type: "generate-all"})}>Generate Loadout</button>
+                   
+                    <div className="randomizerContainer-buttons">
+                        <button disabled={isLoading} className="loadoutButton"onClick={()=>loadoutDispatch({type: "generate-all"})}>Generate Loadout</button>
+                        <button className="settingsButton" onClick={()=>setSettingsVisible(!isSettingsVisible)}><img src="gear.png"/></button>
+                    </div>
                      <div className="randomizerContainer-main">
                         <div className="randomizerContainer-legend">
-                            <LegendInfo legend={loadout.legend}/>
+                            <LegendInfo legend={loadout.legend} loadoutDispatch={loadoutDispatch}/>
                         </div>
                         <CenterIcons loadout={loadout}/>
                          <div className="randomizerContainer-weapons">
-                            <WeaponInfo weapon={loadout.weapon1} position={1}/>
-                            <WeaponInfo weapon={loadout.weapon2} position={2}/>
+                            <WeaponInfo weapon={loadout.weapon1} position={1} loadoutDispatch={loadoutDispatch}/>
+                            <WeaponInfo weapon={loadout.weapon2} position={2} loadoutDispatch={loadoutDispatch}/>
                         </div>
                     </div>
-                   </DispatchContext.Provider>
-                   <SettingsPanel/>
+                    
+                    <Suspense>
+                        {isSettingsVisible && (
+                            <SettingsDispatchContext.Provider value={settingsDispatch}>
+                                <SettingsPanel settings={settings} isVisible={isSettingsVisible} handleChange={()=>setSettingsVisible(!isSettingsVisible)}/>
+                            </SettingsDispatchContext.Provider>
+                        )}
+                    </Suspense>
+                   
                    </>
                 )}
             </div>
             </>
         </>
     )
+    
 }

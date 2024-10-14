@@ -1,16 +1,17 @@
 import WeaponImage from "./WeaponImage";
 import PropTypes from "prop-types";
 import "../css/WeaponInfo.css"
-import {useRef, useContext} from 'react'
-import { DispatchContext } from "./RandomizerContainer";
-export default function WeaponInfo({weapon, position}){
+import {useRef} from 'react'
+
+export default function WeaponInfo({weapon, loadoutDispatch, position}){
     const buttonRef = useRef(null)
-    const loadoutDispatch = useContext(DispatchContext)
+   
     const handleClick = ()=>{
         setTimeout(()=>{
             buttonRef.current.blur()
         }, 500)
-        loadoutDispatch({type: "change-weapon" + position})
+        loadoutDispatch({type:"generate-weapon", payload:{position: position}});
+        
     }
     return(
         <>
@@ -36,6 +37,7 @@ WeaponInfo.propTypes = {
             mythicImageURL: PropTypes.string
         })
     }),
-    position :PropTypes.number
+    position :PropTypes.number,
+    loadoutDispatch: PropTypes.func
 
 }

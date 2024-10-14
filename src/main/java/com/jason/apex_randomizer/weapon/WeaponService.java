@@ -60,6 +60,9 @@ public class WeaponService {
         if(theWeapon.getImageURL() != null){
             existingWeapon.setImageURL(theWeapon.getImageURL());
         }
+        if(theWeapon.getIsCarePackage() != existingWeapon.getIsCarePackage()){
+            existingWeapon.setIsCarePackage(theWeapon.getIsCarePackage());
+        }
         weaponRepository.save(existingWeapon);
         return ResponseEntity.ok(existingWeapon);
 

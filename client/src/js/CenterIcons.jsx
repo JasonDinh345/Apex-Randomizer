@@ -5,12 +5,15 @@ export default function CenterIcons({loadout}){
     
     return(
         <div className="randomizerContainer-icons">
-            {loadout.legend.imageURL  &&
+            {loadout.legend && loadout.legend.imageURL  ? (
                 <>
-                <IconImage imageURL={loadout.weapon1.ammo.imageURL}/>
+                {loadout.weapon1.isCarePackage ? (<IconImage imageURL={loadout.weapon1.ammo.mythicImageURL}/>):(<IconImage imageURL={loadout.weapon1.ammo.imageURL}/>)}
                 <IconImage imageURL={loadout.legend.legendClass.imageURL}/>
-                <IconImage imageURL={loadout.weapon2.ammo.imageURL}/>
+                {loadout.weapon2.isCarePackage ? (<IconImage imageURL={loadout.weapon2.ammo.mythicImageURL}/>):(<IconImage imageURL={loadout.weapon2.ammo.imageURL}/>)}
                 </>
+            ):(
+                <></>
+            )
             }
         </div>
     )
@@ -32,7 +35,8 @@ CenterIcons.propTypes = {
                 name: PropTypes.string,
                 imageURL: PropTypes.string,
                 mythicImageURL: PropTypes.string
-            })
+            }),
+            isCarePackage: PropTypes.bool
         }),
         weapon2: PropTypes.shape({
             name : PropTypes.string,
@@ -41,7 +45,8 @@ CenterIcons.propTypes = {
                 name: PropTypes.string,
                 imageURL: PropTypes.string,
                 mythicImageURL: PropTypes.string
-            })
+            }),
+            isCarePackage: PropTypes.bool
         })
     })
         

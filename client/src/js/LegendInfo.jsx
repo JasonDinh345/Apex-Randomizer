@@ -1,23 +1,28 @@
 
 import LegendImage from "./LegendImage";
 import PropTypes from "prop-types";
-import {useRef, useContext} from 'react'
+import {useRef} from 'react'
 import "../css/LegendInfo.css"
-import { DispatchContext } from "./RandomizerContainer";
-export default function LegendInfo({legend}){
-    const loadoutDispatch = useContext(DispatchContext);
+
+export default function LegendInfo({legend, loadoutDispatch}){
+
     const buttonRef = useRef(null)
     const handleClick = () =>{
         setTimeout(()=>{
             buttonRef.current.blur()
         }, 500)
-        loadoutDispatch({type: "change-legend"})
+        loadoutDispatch({type:"generate-legend"});
+       
     }
     return(
         <>
         <div className="legendContainer" id="legend">
-            {legend.name === undefined ? (<h1>???</h1>):(<h1>{legend.name}</h1>)}
-            <LegendImage imageURL={legend.imageURL}/>
+            {legend && legend.name ? (
+                <h1>{legend.name}</h1>
+            ) : (
+                <h1>???</h1>
+            )}
+            {legend ? (<LegendImage imageURL={legend.imageURL}/>) : ((<LegendImage imageURL={"mysterylegend.png"}/>))}
             
         </div>
         <button ref={buttonRef}className="legend-reroll"onClick={handleClick}  ><img src="reroll.png"/></button>
@@ -33,5 +38,6 @@ LegendInfo.propTypes = {
             imageURL: PropTypes.string
         }),
         imageURL: PropTypes.string,            
-    }),  
+    }), 
+    loadoutDispatch: PropTypes.func 
   };

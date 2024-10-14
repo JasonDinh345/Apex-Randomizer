@@ -3,7 +3,7 @@ export default function IconImage({imageURL}){
     return(
         <>
         <div className='iconImage-contianer'>
-            <img src={imageURL}/>
+            {imageURL !== undefined && <img src={imageURL}/>}
         </div>
         </>
     )

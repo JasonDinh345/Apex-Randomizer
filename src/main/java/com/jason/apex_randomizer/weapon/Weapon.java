@@ -2,6 +2,7 @@ package com.jason.apex_randomizer.weapon;
 
 import com.jason.apex_randomizer.ammo.Ammo;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,15 +37,20 @@ public class Weapon{
 
     private String imageURL;
 
+    @Column(name = "is_care_package", nullable = false)
+    private boolean isCarePackage;
+
     public Weapon(){
         name = null;
         ammo = null;
         imageURL = null;
+        isCarePackage = false;
     }
-    public Weapon(final String theName, final String theAmmoType, final String theImageURL){
+    public Weapon(final String theName, final String theAmmoType, final String theImageURL, final boolean ifInCarePackage){
         name = theName;
         ammoType = theAmmoType;
         imageURL = theImageURL;
+        isCarePackage = ifInCarePackage;
     }
     public Long getId(){
         return id;
@@ -61,6 +67,9 @@ public class Weapon{
     public String getImageURL(){
         return imageURL;
     }
+    public boolean getIsCarePackage(){
+        return isCarePackage;
+    }
     public void setName(final String theName){
         name = theName;
     }
@@ -69,5 +78,8 @@ public class Weapon{
     }
     public void setImageURL(final String theImageURL){
         imageURL = theImageURL;
+    }
+    public void setIsCarePackage(final boolean setIsCarePackage){
+        isCarePackage = setIsCarePackage;
     }
 }
