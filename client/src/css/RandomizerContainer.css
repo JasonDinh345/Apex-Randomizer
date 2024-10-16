@@ -13,6 +13,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    position: relative;
  
 }
 .randomizerContainer-main{
@@ -55,7 +56,8 @@
     border-radius: 50px;
 
     position: absolute;
-    margin-left: 25%; 
+    top:2%;
+    right:2%
 }
 .settingsButton img{
     object-fit: contain;
@@ -98,5 +100,9 @@
     }
     h1{
         font-size: large;
+    }
+    .settingsButton{
+        
+        margin-left: 35%; 
     }
   }

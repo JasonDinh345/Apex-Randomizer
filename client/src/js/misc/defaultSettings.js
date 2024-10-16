@@ -32,7 +32,7 @@ export const defaultSettings = {
         },
         {label: "Exclude Previous Legend", 
             condition: function (legend, prevLegend){
-                if(prevLegend.name === undefined){
+                if(!prevLegend){
                     return true
                 }
                 if(prevLegend.name){
@@ -44,7 +44,7 @@ export const defaultSettings = {
         },
         {label: "Exclude Previous Legend Class", 
             condition: function (legend, prevLegend){
-                if(prevLegend.name){
+                if(prevLegend){
                     return legend.legendClass.name !== prevLegend.legendClass.name
                 }
                 return true;

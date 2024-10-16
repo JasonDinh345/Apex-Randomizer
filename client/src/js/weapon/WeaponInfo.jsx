@@ -1,6 +1,6 @@
 import WeaponImage from "./WeaponImage";
 import PropTypes from "prop-types";
-import "../css/WeaponInfo.css"
+import "../../css/WeaponInfo.css"
 import {useRef} from 'react'
 
 export default function WeaponInfo({weapon, loadoutDispatch, position}){

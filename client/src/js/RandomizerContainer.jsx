@@ -1,10 +1,10 @@
-import LegendInfo from "./LegendInfo";
-import WeaponInfo from "./WeaponInfo";
+import LegendInfo from "./legend/LegendInfo";
+import WeaponInfo from "./weapon/WeaponInfo";
 import { useState, useEffect, useReducer, createContext, useMemo, lazy,  Suspense } from "react";
 import "../css/RandomizerContainer.css"
 
-import CenterIcons from "./CenterIcons";
-const SettingsPanel = lazy(()=>import("./SettingsPanel"))
+import CenterIcons from "./icons/CenterIcons";
+const SettingsPanel = lazy(()=>import("./settings/SettingsPanel"))
 
 import fetchData from "./misc/fetchData";
 import { defaultSettings } from "./misc/defaultSettings";

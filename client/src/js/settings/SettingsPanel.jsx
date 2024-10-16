@@ -1,13 +1,31 @@
 import PropTypes from 'prop-types'
-import "../css/SettingsPanel.css"
+import "../../css/SettingsPanel.css"
 import Setting from './Setting';
-import { SettingsDispatchContext } from './RandomizerContainer'
-import { useContext } from 'react';
+import { SettingsDispatchContext } from '../RandomizerContainer'
+import { useContext, useState, useEffect } from 'react';
 export default function SettingsPanel({settings, isVisible, handleChange}){
     const settingsDispatch = useContext(SettingsDispatchContext);
+    const [screenHeight, setScreenHeight] = useState(document.documentElement.scrollHeight);
+
+    useEffect(() => {
+
+      const handleResize = () => {
+        setScreenHeight(document.documentElement.scrollHeight);
+      };
+  
+    
+      window.addEventListener('resize', handleResize);
+      window.addEventListener('scroll', handleResize);
+  
+    
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleResize);
+      };
+    }, []);
     return(
         <>
-        <div className='darkBG' style={isVisible ?({display: "flex"}):({display: "none"})}>
+        <div className='darkBG' style={isVisible ?({display: "flex", height:`${screenHeight}px`}):({display: "none"})}>
             <div className='settingsPanel'>
                 <h1 className='X-out' onClick={handleChange}>X</h1>
                 <div className='settingsContainer'>

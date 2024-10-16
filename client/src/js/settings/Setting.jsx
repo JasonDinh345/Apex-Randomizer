@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import ToggleSwitch from '../component/ToggleSwtich'
 
 
 export default function Setting({setting, handleChange}){
@@ -6,8 +7,9 @@ export default function Setting({setting, handleChange}){
     return(
         <>
         <label>
+            
+            <ToggleSwitch onToggle={handleChange} isToggled={setting.checked}/>
             {setting.label}
-            <input type= "checkbox" checked={setting.checked} onChange={handleChange}/>
         </label>
         </>
     )

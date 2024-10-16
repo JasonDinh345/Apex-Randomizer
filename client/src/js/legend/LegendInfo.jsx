@@ -2,7 +2,7 @@
 import LegendImage from "./LegendImage";
 import PropTypes from "prop-types";
 import {useRef} from 'react'
-import "../css/LegendInfo.css"
+import "../../css/LegendInfo.css"
 
 export default function LegendInfo({legend, loadoutDispatch}){
 
