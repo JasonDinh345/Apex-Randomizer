@@ -4,11 +4,13 @@ import java.util.Optional;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.jason.apex_randomizer.ammo.Ammo;
 import com.jason.apex_randomizer.ammo.AmmoRepository;
+
 
 @Service
 public class WeaponService {
@@ -25,13 +27,21 @@ public class WeaponService {
     public List<Weapon> getWeapons(){
         return weaponRepository.findAll();
     }
-    public Weapon getWeapon(Long id){
-        return getWeapons().stream().filter(weapon -> weapon.getId().equals(id)).findFirst().orElse(null);
+    public ResponseEntity<?> getWeapon(Long id){
+        Weapon theWeapon = getWeapons().stream().filter(weapon -> weapon.getId().equals(id)).findFirst().orElse(null);
+        if(theWeapon == null){
+             return new ResponseEntity<>("Weapon with the given ID doesn't exist: " + id, HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(theWeapon);
     }
-    public ResponseEntity<Weapon> addNewWeapon(Weapon theWeapon) {
+    public ResponseEntity<?> addNewWeapon(Weapon theWeapon) {
         Optional<Ammo> optionalAmmo = ammoRepository.findAmmoByName(theWeapon.getAmmoType());
         if(!optionalAmmo.isPresent()){
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>("The given ammo name doesn't exist: "+ theWeapon.getAmmoType(), HttpStatus.NOT_FOUND);
+        }
+        Optional<Weapon> optionalWeapon = weaponRepository.findWeaponsByName(theWeapon.getName());
+        if(optionalWeapon.isPresent()){
+           return new ResponseEntity<>("Weapon with the given name already exists!: " + theWeapon.getName(), HttpStatus.FORBIDDEN);
         }
         Ammo ammo = optionalAmmo.get();
         theWeapon.setAmmo(ammo);
@@ -39,10 +49,10 @@ public class WeaponService {
         return ResponseEntity.ok(theWeapon);
     }
 
-    public ResponseEntity<Weapon> updateWeapon(Long id, Weapon theWeapon) {
+    public ResponseEntity<?> updateWeapon(Long id, Weapon theWeapon) {
         Optional<Weapon> optionalWeapon = weaponRepository.findById(id);
         if(!optionalWeapon.isPresent()){
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>("Weapon with the given ID doesn't exist: " + id, HttpStatus.NOT_FOUND);
         }
         Weapon existingWeapon = optionalWeapon.get();
 
@@ -68,11 +78,11 @@ public class WeaponService {
 
     }
 
-    public ResponseEntity<Weapon> deleteWeapon(Long id) {
+    public ResponseEntity<?> deleteWeapon(Long id) {
         if(weaponRepository.existsById(id)){
             weaponRepository.deleteById(id);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.notFound().build();
+        return new ResponseEntity<>("Weapon with the given ID doesn't exist: " + id, HttpStatus.NOT_FOUND);
     }
 }

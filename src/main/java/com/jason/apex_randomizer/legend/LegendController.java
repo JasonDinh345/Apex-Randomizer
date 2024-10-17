@@ -1,7 +1,7 @@
 package com.jason.apex_randomizer.legend;
 
 
-import java.util.List;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,25 +27,25 @@ public class LegendController {
     }
 	
     @GetMapping
-    public List<Legend> getLegends(){
+    public ResponseEntity<?>  getLegends(){
         return myService.getLegends();
     }
     @GetMapping("/{id}")
-    public Legend getLegends(@PathVariable Long id){
+    public ResponseEntity<?> getLegend(@PathVariable Long id){
         return myService.getLegendById(id);
     }
 
     @PostMapping
-    public ResponseEntity<Legend> addNewLegend(@RequestBody Legend theLegend){
+    public ResponseEntity<?> addNewLegend(@RequestBody Legend theLegend){
         return myService.addNewLegend(theLegend);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Legend> updateLegend(@PathVariable Long id, @RequestBody Legend updatedLegend) {
+    public ResponseEntity<?> updateLegend(@PathVariable Long id, @RequestBody Legend updatedLegend) {
         return myService.updateLegend(id, updatedLegend);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Legend> deleteLegend(@PathVariable Long id){
+    public ResponseEntity<?> deleteLegend(@PathVariable Long id){
         return myService.deleteLegend(id);
     }
 }

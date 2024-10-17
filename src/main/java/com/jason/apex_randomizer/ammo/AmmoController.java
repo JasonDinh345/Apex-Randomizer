@@ -29,21 +29,21 @@ public class AmmoController {
         return ammoService.getAmmo();
     }
     @GetMapping("/{id}")
-    public Ammo getAmmo(@PathVariable Long id){
+    public ResponseEntity<?> getAmmo(@PathVariable Long id){
         return ammoService.getAmmo(id);
     }
 
     @PostMapping
-    public ResponseEntity<Ammo> addNewAmmo(@RequestBody Ammo theAmmo){
+    public ResponseEntity<?> addNewAmmo(@RequestBody Ammo theAmmo){
         return ammoService.addNewAmmo(theAmmo);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Ammo> updateAmmo(@PathVariable Long id, @RequestBody Ammo theAmmo){
+    public ResponseEntity<?> updateAmmo(@PathVariable Long id, @RequestBody Ammo theAmmo){
         return ammoService.updateAmmo(id, theAmmo);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Ammo> deleteAmmo(@PathVariable Long id){
+    public ResponseEntity<?> deleteAmmo(@PathVariable Long id){
         return ammoService.deleteAmmo(id);
     }
 }

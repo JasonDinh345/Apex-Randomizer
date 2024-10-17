@@ -3,11 +3,13 @@ package com.jason.apex_randomizer.ammo;
 import java.util.List;
 
 import java.util.Optional;
-
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+
 
 @Service
 public class AmmoService{
@@ -22,24 +24,32 @@ public class AmmoService{
     public List<Ammo> getAmmo() {
         return ammoRepository.findAll();
     }
-    public Ammo getAmmo(Long id) {
-        return this.getAmmo().stream().filter(ammo -> ammo.getID().equals(id)).findFirst().orElse(null);
+    public ResponseEntity<?> getAmmo(Long id) {
+        Ammo theAmmo = getAmmo().stream().filter(ammo -> ammo.getID().equals(id)).findFirst().orElse(null);
+        if(theAmmo == null){
+            return new ResponseEntity<>("Ammo with the given ID doesn't exist: " + id  , HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(theAmmo);
     }
 
-    public ResponseEntity<Ammo> addNewAmmo(Ammo theAmmo) {
+    public ResponseEntity<?> addNewAmmo(Ammo theAmmo) {
         Optional<Ammo> optionalAmmo = ammoRepository.findAmmoByName(theAmmo.getName());
         if(optionalAmmo.isPresent()){
-           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+           return new ResponseEntity<>("Ammo already exists: " + theAmmo.getName()  , HttpStatus.FORBIDDEN);
         }
         ammoRepository.save(theAmmo);
         return ResponseEntity.ok(theAmmo);
     }
 
-    public ResponseEntity<Ammo> updateAmmo(Long id, Ammo theAmmo) {
-        Ammo existingAmmo = getAmmo(id);
-        if(existingAmmo == null){
-            return  ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<?> updateAmmo(Long id, Ammo theAmmo) {
+       Ammo existingAmmo;
+        try{
+			existingAmmo = ammoRepository.findById(id).get();
+		}catch(NoSuchElementException e){
+			return new ResponseEntity<>("Ammo with the given ID doesn't exist: " + id, HttpStatus.NOT_FOUND);
+			
+		}
+        
         if(theAmmo.getName() != null){
             existingAmmo.setName(theAmmo.getName());
         }
@@ -53,12 +63,12 @@ public class AmmoService{
         return ResponseEntity.ok(existingAmmo);
     }
 
-    public ResponseEntity<Ammo> deleteAmmo(Long id) {
+    public ResponseEntity<?> deleteAmmo(Long id) {
        if(ammoRepository.existsById(id)){
         ammoRepository.deleteById(id);
         return ResponseEntity.noContent().build();
        }
-       return ResponseEntity.notFound().build();
+       return new ResponseEntity<>("Ammo with the given ID doesn't exist: " + id, HttpStatus.NOT_FOUND);
     }
 
 

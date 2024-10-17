@@ -44,16 +44,16 @@ export default function RandomizerContainer(){
     const dupeSetting = settings.weaponSettings.filter(setting => setting.label.includes("Duplicate"))
 
     
- 
+   
     const filteredLegends = useMemo(()=>{
-
+        console.log(prevLoadout.legend)
         return legends.filter(legend => {
             return settings.legendSettings.every(setting => !setting.checked || setting.condition(legend, prevLoadout.legend));
         })
     },[settings, legends,prevLoadout])
-
+    console.log(filteredLegends)
     const filteredWeapons = useMemo(()=>{
-        console.log(prevLoadout)
+    
         return weapons.filter(weapon => {
             return settings.weaponSettings.every(setting => {
               
@@ -67,6 +67,9 @@ export default function RandomizerContainer(){
     },[settings, weapons ,prevLoadout])
   
     const getRandomLegend = ()=>{
+        if(filteredLegends.length === 0){
+            return {}
+        }
         return filteredLegends[Math.floor(Math.random() * filteredLegends.length)]
     }
     const getRandomWeapon = ()=>{
@@ -121,11 +124,11 @@ export default function RandomizerContainer(){
         }
       }, [legends, weapons,ammo, legendClasses]);
     const loadoutReducer = (loadout, action) => {
-        setPrevLoadout(loadout)
+        setPrevLoadout(loadout || {legend: {}, weapon1: {}, weapon2: {}})
         let weapon1 = getRandomWeapon();
         let weapon2 = getRandomWeapon();
         let legend = getRandomLegend();
-        switch(loadout, action.type){
+        switch( action.type){
             case("generate-all"):
                 while(dupeSetting.some(setting => {
                     if(setting.checked){
@@ -169,6 +172,9 @@ export default function RandomizerContainer(){
     
     const [loadout, loadoutDispatch] = useReducer(loadoutReducer, {legend: {}, weapon1: {}, weapon2: {}})
     
+    useEffect(()=>{
+        setPrevLoadout(loadout || {legend: {}, weapon1: {}, weapon2: {}})
+    },[loadout])
     
       
     return(

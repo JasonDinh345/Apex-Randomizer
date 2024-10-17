@@ -28,19 +28,19 @@ public class LegendClassController {
         return legendClassService.getLegendClasses();
     }
     @GetMapping("/{id}")
-    public LegendClass getLegendClass(@PathVariable Long id){
+    public ResponseEntity<?> getLegendClass(@PathVariable Long id){
         return legendClassService.getLegendClass(id);
     }
     @PostMapping
-    public ResponseEntity<LegendClass> addNewLegendClass(@RequestBody LegendClass theClass){
+    public ResponseEntity<?> addNewLegendClass(@RequestBody LegendClass theClass){
         return legendClassService.addNewLegendClass(theClass);
     }
     @PatchMapping("/{id}")
-    public ResponseEntity<LegendClass> updateLegendClass(@PathVariable Long id, @RequestBody LegendClass theClass){
+    public ResponseEntity<?> updateLegendClass(@PathVariable Long id, @RequestBody LegendClass theClass){
         return legendClassService.updateLegendClass(id, theClass);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<LegendClass> deleteLegendClass(@PathVariable Long id){
+    public ResponseEntity<?> deleteLegendClass(@PathVariable Long id){
         return legendClassService.deleteLegendClass(id);
     }
 }

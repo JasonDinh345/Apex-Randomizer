@@ -29,19 +29,19 @@ public class WeaponController {
         return weaponService.getWeapons();
     }
     @GetMapping("/{id}")
-    public Weapon getWeapon(@PathVariable Long id){
+    public ResponseEntity<?> getWeapon(@PathVariable Long id){
         return weaponService.getWeapon(id);
     }
     @PostMapping
-    public ResponseEntity<Weapon> addNewWeapon(@RequestBody Weapon theWeapon){
+    public ResponseEntity<?> addNewWeapon(@RequestBody Weapon theWeapon){
         return weaponService.addNewWeapon(theWeapon);
     }
     @PatchMapping("/{id}")
-    public ResponseEntity<Weapon> updateWeapon(@PathVariable Long id, @RequestBody Weapon theWeapon){
+    public ResponseEntity<?> updateWeapon(@PathVariable Long id, @RequestBody Weapon theWeapon){
         return weaponService.updateWeapon(id, theWeapon);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Weapon> deleteWeapon(@PathVariable Long id){
+    public ResponseEntity<?> deleteWeapon(@PathVariable Long id){
         return weaponService.deleteWeapon(id);
     }
 }

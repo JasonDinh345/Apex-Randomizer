@@ -1,6 +1,6 @@
 package com.jason.apex_randomizer.legend;
 
-import java.util.List;
+
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -25,30 +25,36 @@ public class LegendService {
 		legendRepository = theRepository;
 		legendClassRepository = theRepo;
 	}
-	public List<Legend> getLegends(){
-		return legendRepository.findAll();
+	public ResponseEntity<?> getLegends(){
+		return ResponseEntity.ok(legendRepository.findAll());
 	}
-	public ResponseEntity<Legend> addNewLegend(Legend theLegend) {
+	public ResponseEntity<?>  getLegendById(Long id){
+		Legend theLegend = legendRepository.findAll().stream().filter(legend -> legend.getID().equals(id)).findFirst().orElse(null);
+		if(theLegend == null){
+			return new ResponseEntity<>("Legend with the given ID doesn't exist: " + id, HttpStatus.NOT_FOUND);
+		}
+		return ResponseEntity.ok(theLegend);
+	}
+	public ResponseEntity<?> addNewLegend(Legend theLegend) {
+		if(theLegend == null){
+			return new ResponseEntity<>("Legend can't be null!", HttpStatus.FORBIDDEN);
+		}
 		Optional<Legend> legendOptional = legendRepository.findLegendByName(theLegend.getName());
 		Optional<LegendClass> optionalClass = legendClassRepository.findLegendClassByName(theLegend.getClassName());
 		if(legendOptional.isPresent()||!optionalClass.isPresent()){
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			return new ResponseEntity<>("Legend already Exists: " + theLegend.getName(), HttpStatus.FORBIDDEN);
 		}
 		theLegend.setLegendClass(optionalClass.get());
 		legendRepository.save(theLegend);
 		return ResponseEntity.ok(theLegend);
 	}
 
-	public Legend getLegendById(Long id){
-		return legendRepository.findAll().stream().filter(legend -> legend.getID().equals(id)).findFirst().orElse(null);
-	}
-
-	public ResponseEntity<Legend> updateLegend(Long id, Legend updatedLegend){
+	public ResponseEntity<?> updateLegend(Long id, Legend updatedLegend){
 		Legend existingLegend;
         try{
 			existingLegend = legendRepository.findById(id).get();
 		}catch(NoSuchElementException e){
-			return ResponseEntity.notFound().build();
+			return new ResponseEntity<>("Legend with the given ID doesn't exist: " + id, HttpStatus.NOT_FOUND);
 			
 		}
         
@@ -58,7 +64,7 @@ public class LegendService {
         if (updatedLegend.getClassName() != null) {
 			Optional<LegendClass> optionalClass = legendClassRepository.findLegendClassByName(updatedLegend.getClassName());
 			if(!optionalClass.isPresent()){
-				return ResponseEntity.badRequest().build();
+				return new ResponseEntity<>("The given classname doesn't exist: " + updatedLegend.getClassName(), HttpStatus.NOT_FOUND);
 			}
 
             existingLegend.setLegendClass(optionalClass.get());
@@ -71,11 +77,11 @@ public class LegendService {
 		legendRepository.save(existingLegend);
 		return ResponseEntity.ok(existingLegend);
 	}
-    public ResponseEntity<Legend> deleteLegend(Long id) {
+    public ResponseEntity<?> deleteLegend(Long id) {
 		if (legendRepository.existsById(id)) {
             legendRepository.deleteById(id);
 			return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.notFound().build();
+		return new ResponseEntity<>("Legend with the given ID doesn't exist: " + id, HttpStatus.NOT_FOUND);
     }
 }

@@ -32,19 +32,18 @@ export const defaultSettings = {
         },
         {label: "Exclude Previous Legend", 
             condition: function (legend, prevLegend){
-                if(!prevLegend){
-                    return true
-                }
+                
                 if(prevLegend.name){
                     return legend.name !== prevLegend.name
                 }
-                return false;
+                return true;
             },
             checked: false
         },
         {label: "Exclude Previous Legend Class", 
             condition: function (legend, prevLegend){
-                if(prevLegend){
+                
+                if(prevLegend.name){
                     return legend.legendClass.name !== prevLegend.legendClass.name
                 }
                 return true;

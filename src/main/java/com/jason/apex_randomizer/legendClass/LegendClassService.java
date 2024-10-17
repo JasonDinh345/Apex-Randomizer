@@ -4,9 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import java.util.NoSuchElementException;
 
 
 @Service
@@ -23,24 +24,30 @@ public class LegendClassService {
        return legendClassRepository.findAll();
     }
 
-    public LegendClass getLegendClass(Long id) {
-        return getLegendClasses().stream().filter(legendClass -> legendClass.getID().equals(id)).findFirst().orElse(null);
+    public ResponseEntity<?> getLegendClass(Long id) {
+        LegendClass theLegendClass  = getLegendClasses().stream().filter(legendClass -> legendClass.getID().equals(id)).findFirst().orElse(null);
+        if(theLegendClass == null){
+            return new ResponseEntity<>("Legend Class with the given ID doesn't exist: " + id  , HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(theLegendClass);
     }
 
-    public ResponseEntity<LegendClass> addNewLegendClass(LegendClass theClass) {
+    public ResponseEntity<?> addNewLegendClass(LegendClass theClass) {
         Optional<LegendClass> optionalLegend = legendClassRepository.findLegendClassByName(theClass.getName());
         if(optionalLegend.isPresent()){
-            return ResponseEntity.badRequest().build();
+           return new ResponseEntity<>("Legend Class with the given name already exists!: " + theClass.getName(), HttpStatus.FORBIDDEN);
         }
         legendClassRepository.save(theClass);
         return ResponseEntity.ok(theClass);
         
     }
 
-    public ResponseEntity<LegendClass> updateLegendClass(Long id, LegendClass theClass) {
-        LegendClass existingClass = getLegendClass(id);
-        if(existingClass == null){
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<?> updateLegendClass(Long id, LegendClass theClass) {
+        LegendClass existingClass;
+        try{
+            existingClass = legendClassRepository.findById(id).get();
+        }catch(NoSuchElementException e){
+            return new ResponseEntity<>("Legend Class with the given ID doesn't exist: " + id  , HttpStatus.NOT_FOUND);
         }
         if(theClass.getName() != null){
             existingClass.setName(theClass.getName());
@@ -52,12 +59,12 @@ public class LegendClassService {
         return ResponseEntity.ok(existingClass);
     }
 
-    public ResponseEntity<LegendClass> deleteLegendClass(Long id) {
+    public ResponseEntity<?> deleteLegendClass(Long id) {
         if(legendClassRepository.existsById(id)){
             legendClassRepository.deleteById(id);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.badRequest().build();
+        return new ResponseEntity<>("Legend Class with the given ID doesn't exist: " + id, HttpStatus.NOT_FOUND);
     }
 
 }
